@@ -1,0 +1,5 @@
+# dev tools
+[._]*.sw[a-p]
+
+# build output
+*.elf
