@@ -1,4 +1,20 @@
-PROJ=underland
+PROJ = underland
+
+BINDIR = bin
+SRCDIR = src
+AUXFILES = Makefile README.md
+
+SRCFILES := $(shell find $(SRCDIR) -type f -name "*.c")
+HDRFILES := $(shell find $(SRCDIR) -type f -name "*.h")
+ALLFILES := $(SRCFILES) $(HDRFILES) $(AUXFILES)
+
+CC=gcc
+CCFLAGS=-Wall -Werror -Wextra
+
+$(shell mkdir -p $(BINDIR))
+
+.PHONY: all # Build all executable target
+all: $(PROJ)
 
 .PHONY: image # Build Docker development image
 image:
@@ -8,13 +24,17 @@ image:
 shell:
 	scripts/shell.sh $(PROJ)
 
-.PHONY: build # Build Underland executable
-build:
-	scripts/build.sh
+.PHONY: $(PROJ) # Build Underland executable
+$(PROJ):
+	$(CC) $(CCFLAGS) -o $(BINDIR)/$@ $(SRCFILES)
 
 .PHONY: clean # Remove all build content
 clean:
-	rm -rf bin
+	-@$(RM) $(BINDIR)/* $(PROJ).tgz
+
+.PHONY: dist # Build tarball for distribution
+dist:
+	@tar czf $(PROJ).tgz $(ALLFILES)
 
 .PHONY: help # List all available make targets
 help:
