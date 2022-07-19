@@ -13,6 +13,7 @@ RUN apt update -y && \
     DEBIAN_FRONTEND=noninteractive \
     apt install -y \
     build-essential \
+    clang-format \
     make
 
 # Run container with non-root dev user

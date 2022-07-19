@@ -1,13 +1,15 @@
-PROJ = underland
+PROJ=underland
 
-BINDIR = bin
-SRCDIR = src
-AUXFILES = Makefile README.md
+BINDIR=bin
+SRCDIR=src
+AUXFILES=Makefile README.md
 
-SRCFILES := $(shell find $(SRCDIR) -type f -name "*.c")
-HDRFILES := $(shell find $(SRCDIR) -type f -name "*.h")
-ALLFILES := $(SRCFILES) $(HDRFILES) $(AUXFILES)
+SRCFILES:=$(shell find $(SRCDIR) -type f -name "*.c")
+HDRFILES:=$(shell find $(SRCDIR) -type f -name "*.h")
+ALLFILES:=$(SRCFILES) $(HDRFILES) $(AUXFILES)
 
+FMT=clang-format
+FMTFLAGS=-i
 CC=gcc
 CCFLAGS=-Wall -Werror -Wextra
 
@@ -24,8 +26,12 @@ image:
 shell:
 	scripts/shell.sh $(PROJ)
 
-.PHONY: $(PROJ) # Build Underland executable
-$(PROJ):
+.PHONY: format # Run ClangFormat on C files
+format:
+	$(FMT) $(FMTFLAGS) $(SRCFILES) $(HDRFILES)
+
+.PHONY: build # Build Underland executable
+build:
 	$(CC) $(CCFLAGS) -o $(BINDIR)/$@ $(SRCFILES)
 
 .PHONY: clean # Remove all build content
